@@ -1,0 +1,54 @@
+﻿@model IEnumerable<WebMvc.ViewModels.WeatherExtremesViewModel>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Location.Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinimumTemperature)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaximumWindSpeed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastUpdate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MinimumTemperature)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaximumWindSpeed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdate)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

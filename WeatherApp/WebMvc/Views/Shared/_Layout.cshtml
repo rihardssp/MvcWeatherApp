@@ -22,7 +22,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Report" asp-action="Index">Report</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Helper tool
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="" asp-controller="Weather" asp-action="Index">Weather entry list</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Weather" asp-action="Create">Create weather entry</a>
+                                <div class="dropdown-divider"> </div>
+                                <a class="dropdown-item" asp-area="" asp-controller="Location" asp-action="Index">Location entry list</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Location" asp-action="Create">Create location entry</a>
+                            </div>
                         </li>
                     </ul>
                 </div>

@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMvc", "WebMvc\WebMvc.csproj", "{356DD432-E131-447B-AD22-8E981A743BE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMvc", "WebMvc\WebMvc.csproj", "{356DD432-E131-447B-AD22-8E981A743BE0}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C52957B8-28E6-4AE3-ADA6-578990E872BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreWeatherApp", "..\CoreWeatherApp\CoreWeatherApp.csproj", "{7C53D89B-AD94-43D0-BF91-CF829AC823CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C52957B8-28E6-4AE3-ADA6-578990E872BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C52957B8-28E6-4AE3-ADA6-578990E872BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C52957B8-28E6-4AE3-ADA6-578990E872BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C53D89B-AD94-43D0-BF91-CF829AC823CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C53D89B-AD94-43D0-BF91-CF829AC823CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C53D89B-AD94-43D0-BF91-CF829AC823CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C53D89B-AD94-43D0-BF91-CF829AC823CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
