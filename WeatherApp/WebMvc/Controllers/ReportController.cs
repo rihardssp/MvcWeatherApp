@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebMvc.Data;
 using WebMvc.ViewModels;
 
@@ -26,16 +24,18 @@ namespace WebMvc.Controllers
                 select new
                 {
                     locationGroup.Key,
-                    temp = locationGroup.Min(e => e.Temperature),
-                    wind = locationGroup.Max(e => e.WindSpeed),
+                    MinimumTemperature = locationGroup.Min(e => e.Temperature),
+                    MaximumWindSpeed = locationGroup.Max(e => e.WindSpeed),
+                    LastUpdate = locationGroup.Max(e => e.Date)
                 } into groupedValues
                 join location in _context.LocationModel.AsNoTracking()
                     on groupedValues.Key equals location.Id
                 select new WeatherExtremesViewModel
                 {
                     Location = location,
-                    MinimumTemperature = groupedValues.temp,
-                    MaximumWindSpeed = groupedValues.wind,
+                    MinimumTemperature = groupedValues.MinimumTemperature,
+                    MaximumWindSpeed = groupedValues.MaximumWindSpeed,
+                    LastUpdate = groupedValues.LastUpdate
                 };
 
             var extremesData = query.ToList();
