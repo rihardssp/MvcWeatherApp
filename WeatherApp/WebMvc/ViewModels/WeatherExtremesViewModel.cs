@@ -1,4 +1,4 @@
-﻿using CoreWeatherApp.Models;
+﻿using DataAccessLayer.Models;
 using System;
 
 namespace WebMvc.ViewModels

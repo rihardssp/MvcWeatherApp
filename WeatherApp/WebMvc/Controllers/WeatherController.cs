@@ -1,25 +1,26 @@
-﻿using CoreWeatherApp.Models;
+﻿using DataAccessLayer.Contexts;
+using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using WebMvc.Data;
 
 namespace WebMvc.Controllers
 {
     public class WeatherController : Controller
     {
-        private readonly WeatherContext _context;
+        private readonly IRepositoryWrapper _repository;
 
-        public WeatherController(WeatherContext context)
+        public WeatherController(IRepositoryWrapper repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Weather
         public async Task<IActionResult> Index()
         {
-            return View(await _context.WeatherEntryModel.ToListAsync());
+            return View(await _repository.WeatherEntry.FindAll().ToListAsync());
         }
 
         // GET: Weather/Details/5
@@ -30,7 +31,7 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
-            var weatherEntryModel = await _context.WeatherEntryModel
+            var weatherEntryModel = await _repository.WeatherEntry.FindAll()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (weatherEntryModel == null)
             {
@@ -55,8 +56,8 @@ namespace WebMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(weatherEntryModel);
-                await _context.SaveChangesAsync();
+                _repository.WeatherEntry.Add(weatherEntryModel);
+                await _repository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(weatherEntryModel);
@@ -70,7 +71,7 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
-            var weatherEntryModel = await _context.WeatherEntryModel.FindAsync(id);
+            var weatherEntryModel = await _repository.WeatherEntry.FindAsync(id);
             if (weatherEntryModel == null)
             {
                 return NotFound();
@@ -94,8 +95,8 @@ namespace WebMvc.Controllers
             {
                 try
                 {
-                    _context.Update(weatherEntryModel);
-                    await _context.SaveChangesAsync();
+                    _repository.WeatherEntry.Update(weatherEntryModel);
+                    await _repository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,7 +122,7 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
-            var weatherEntryModel = await _context.WeatherEntryModel
+            var weatherEntryModel = await _repository.WeatherEntry.FindAll()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (weatherEntryModel == null)
             {
@@ -136,15 +137,15 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var weatherEntryModel = await _context.WeatherEntryModel.FindAsync(id);
-            _context.WeatherEntryModel.Remove(weatherEntryModel);
-            await _context.SaveChangesAsync();
+            var weatherEntryModel = await _repository.WeatherEntry.FindAsync(id);
+            _repository.WeatherEntry.Remove(weatherEntryModel);
+            await _repository.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool WeatherEntryModelExists(int id)
         {
-            return _context.WeatherEntryModel.Any(e => e.Id == id);
+            return _repository.WeatherEntry.FindAll().Any(e => e.Id == id);
         }
     }
 }

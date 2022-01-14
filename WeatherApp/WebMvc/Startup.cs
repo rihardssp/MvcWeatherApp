@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using WebMvc.Data;
+using DataAccessLayer.Contexts;
 
 namespace WebMvc
 {
@@ -24,6 +24,8 @@ namespace WebMvc
 
             services.AddDbContext<WeatherContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("WeatherContext")));
+
+            services.UseRepositories();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,25 +1,26 @@
-﻿using CoreWeatherApp.Models;
+﻿using DataAccessLayer.Contexts;
+using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using WebMvc.Data;
 
 namespace WebMvc.Controllers
 {
     public class LocationController : Controller
     {
-        private readonly WeatherContext _context;
+        private readonly IRepositoryWrapper _repository;
 
-        public LocationController(WeatherContext context)
+        public LocationController(IRepositoryWrapper repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Location
         public async Task<IActionResult> Index()
         {
-            return View(await _context.LocationModel.ToListAsync());
+            return View(await _repository.Location.FindAll().ToListAsync());
         }
 
         // GET: Location/Details/5
@@ -30,7 +31,7 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
-            var locationModel = await _context.LocationModel
+            var locationModel = await _repository.Location.FindAll()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (locationModel == null)
             {
@@ -55,8 +56,8 @@ namespace WebMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(locationModel);
-                await _context.SaveChangesAsync();
+                _repository.Location.Add(locationModel);
+                await _repository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(locationModel);
@@ -70,7 +71,7 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
-            var locationModel = await _context.LocationModel.FindAsync(id);
+            var locationModel = await _repository.Location.FindAsync(id);
             if (locationModel == null)
             {
                 return NotFound();
@@ -94,8 +95,8 @@ namespace WebMvc.Controllers
             {
                 try
                 {
-                    _context.Update(locationModel);
-                    await _context.SaveChangesAsync();
+                    _repository.Location.Update(locationModel);
+                    await _repository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,7 +122,7 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
-            var locationModel = await _context.LocationModel
+            var locationModel = await _repository.Location.FindAll()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (locationModel == null)
             {
@@ -136,15 +137,15 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var locationModel = await _context.LocationModel.FindAsync(id);
-            _context.LocationModel.Remove(locationModel);
-            await _context.SaveChangesAsync();
+            var locationModel = await _repository.Location.FindAsync(id);
+            _repository.Location.Remove(locationModel);
+            await _repository.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LocationModelExists(int id)
         {
-            return _context.LocationModel.Any(e => e.Id == id);
+            return _repository.Location.FindAll().Any(e => e.Id == id);
         }
     }
 }
