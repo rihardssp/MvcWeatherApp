@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                version="2.0">
+
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+
+  <schedule>
+
+    <job>
+      <name>UpdateWeatherDataJob</name>
+      <group>UpdateJobGroup</group>
+      <description>Calls an API to get weather data and then updates DB with said data.</description>
+      <job-type>BatchQueue.Jobs.UpdateWeatherDataJob, BatchQueue</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>SomeValue</key>
+          <value>Absolutely rad!</value>
+        </entry>
+      </job-data-map>
+    </job>
+
+    <trigger>
+      <simple>
+        <name>UpdateWeatherTrigger</name>
+        <group>UpdateTriggersGroup</group>
+        <job-name>UpdateWeatherDataJob</job-name>
+        <job-group>UpdateJobGroup</job-group>
+        <misfire-instruction>IgnoreMisfirePolicy</misfire-instruction>
+        <repeat-count>-1</repeat-count>
+        <repeat-interval>600000</repeat-interval>
+      </simple>
+    </trigger>
+  </schedule>
+
+</job-scheduling-data>

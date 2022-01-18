@@ -2,7 +2,7 @@
 using DataAccessLayer.Models;
 using DataAccessLayer.RepositoryAbstractions;
 
-namespace DataAccessLayer.Repositories
+namespace DataAccessLayer.Repositories.Weather
 {
     public class WeatherEntryRepository : RepositoryBase<WeatherEntryModel>, IWeatherEntryRepository
     {

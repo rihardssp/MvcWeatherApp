@@ -15,7 +15,7 @@ namespace DataAccessLayer.Models
         [Required]
         public LocationModel Location { get; set; }
         public DateTime Date { get; set; }
-        public int Temperature { get; set; }
-        public int WindSpeed { get; set; }
+        public double Temperature { get; set; }
+        public double WindSpeed { get; set; }
     }
 }

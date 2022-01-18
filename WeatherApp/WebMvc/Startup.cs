@@ -5,9 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Contexts;
+using DataAccessLayer.Extensions;
 
 namespace WebMvc
 {
+    /// <summary>
+    /// This MVC is the front-end for the Weather app. Due to convenience, it'll also seed the database 
+    /// with the use of EF (which wouldn't be realistic on production environment)
+    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)

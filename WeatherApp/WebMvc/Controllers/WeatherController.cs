@@ -1,5 +1,4 @@
-﻿using DataAccessLayer.Contexts;
-using DataAccessLayer.Models;
+﻿using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +9,9 @@ namespace WebMvc.Controllers
 {
     public class WeatherController : Controller
     {
-        private readonly IRepositoryWrapper _repository;
+        private readonly IWeatherRepositoryWrapper _repository;
 
-        public WeatherController(IRepositoryWrapper repository)
+        public WeatherController(IWeatherRepositoryWrapper repository)
         {
             _repository = repository;
         }

@@ -6,6 +6,16 @@ services:
     build:
       context: .
       dockerfile: WebMvc/Dockerfile
+    depends_on:
+      - db
+  batchqueue:
+    image: ${DOCKER_REGISTRY-}batchqueue
+    build:
+      context: .
+      dockerfile: BatchQueue/Dockerfile
+    depends_on:
+      - db
+      - webmvc
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:

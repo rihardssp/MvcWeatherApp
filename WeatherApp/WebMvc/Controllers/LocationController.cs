@@ -10,9 +10,9 @@ namespace WebMvc.Controllers
 {
     public class LocationController : Controller
     {
-        private readonly IRepositoryWrapper _repository;
+        private readonly IWeatherRepositoryWrapper _repository;
 
-        public LocationController(IRepositoryWrapper repository)
+        public LocationController(IWeatherRepositoryWrapper repository)
         {
             _repository = repository;
         }

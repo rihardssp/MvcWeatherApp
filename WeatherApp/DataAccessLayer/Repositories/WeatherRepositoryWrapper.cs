@@ -1,9 +1,10 @@
 ﻿using DataAccessLayer.Contexts;
+using DataAccessLayer.Repositories.Weather;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class RepositoryWrapper : IRepositoryWrapper
+    public class WeatherRepositoryWrapper : IWeatherRepositoryWrapper
     {
         private WeatherContext _dbContext;
         private ILocationRepository _location;
@@ -31,7 +32,7 @@ namespace DataAccessLayer.Repositories
             }
         }
 
-        public RepositoryWrapper(WeatherContext dbContext)
+        public WeatherRepositoryWrapper(WeatherContext dbContext)
         {
             _dbContext = dbContext;
         }

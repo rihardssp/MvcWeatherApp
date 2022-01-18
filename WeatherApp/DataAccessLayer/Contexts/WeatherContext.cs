@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Contexts
 {
+    /// <summary>
+    /// Context for the Weather domain
+    /// </summary>
     public class WeatherContext : DbContext
     {
         public WeatherContext() { }
@@ -15,9 +18,6 @@ namespace DataAccessLayer.Contexts
 
         public DbSet<LocationModel> LocationModel { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"server=localhost;user=sa;password=Ex0Mplew@!3kew;database=MeteorologicalDb;");
-        }
+        
     }
 }
