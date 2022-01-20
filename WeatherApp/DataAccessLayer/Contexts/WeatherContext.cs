@@ -1,5 +1,7 @@
-﻿using DataAccessLayer.Models;
+﻿using DataAccessLayer.MigrationExtensions;
+using DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Contexts
 {
@@ -15,9 +17,12 @@ namespace DataAccessLayer.Contexts
         }
 
         public DbSet<WeatherEntryModel> WeatherEntryModel { get; set; }
-
         public DbSet<LocationModel> LocationModel { get; set; }
+        public DbSet<WeatherAttributeModel> WeatherAttributeModel { get; set; }
+        public DbSet<WeatherAttributeTypeModel> WeatherAttributeTypeModel { get; set; }
 
-        
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options
+                .ReplaceService<IMigrationsSqlGenerator, SqlServerMigrationGeneratorExtension>();
     }
 }

@@ -1,20 +1,15 @@
 ﻿@model WebMvc.ViewModels.ChartViewModel
+
 <canvas id="@Model.Id" class="@Model.CssClass"></canvas>
 <script>
         $(function () {
-            const labels = [
-                @Html.Raw(string.Join(",", Model.ChartDescriptions.Select(e => $"'{Html.Encode(e)}'")))
-            ];
-
             const dataset = [{
                 label: "@Model.Description",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: [
-                    @string.Join(",", Model.Values)
-                ],
+                data: @Json.Serialize(Model.Data),
             }];
 
-            ChartUtil.CreateChart("@Model.Id", '@Model.ChartType', labels, dataset);
+            ChartUtil.CreateChart("@Model.Id", '@Model.ChartType', dataset);
         });
 </script>

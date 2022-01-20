@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Models;
+﻿using DataAccessLayer.Enums;
+using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -30,23 +31,26 @@ namespace BatchQueue.Jobs
         {
             try
             {
+                // TODO: add cloud data?
+
+                var attributeTypes = new int[] { (int)AttributeType.TemperatureCelsius, (int)AttributeType.WindSpeedMs };
                 var locationAndWeatherMaxDates = (from location in _repository.Location.FindAll()
-                                                 from weather in _repository.WeatherEntry.FindAll()
-                                                   .Where(e => e.LocationId == location.Id)
-                                                   .DefaultIfEmpty()
-                                                 select new
-                                                 {
-                                                     location.Id,
-                                                     location.ApiId,
-                                                     date = weather == null ? DateTime.MinValue : weather.Date
-                                                 } into locationAndDate
-                                                 group locationAndDate by new { locationAndDate.Id, locationAndDate.ApiId } into locationAndDateGroup
-                                                 select new
-                                                 {
-                                                     locationAndDateGroup.Key.Id,
-                                                     locationAndDateGroup.Key.ApiId,
-                                                     lastUpdate = locationAndDateGroup.Max(e => e.date)
-                                                 })
+                                                  from weather in _repository.WeatherAttribute.FindAll()
+                                                    .Where(e => e.LocationId == location.Id && (e.TypeId == (int)AttributeType.TemperatureCelsius || e.TypeId == (int)AttributeType.WindSpeedMs))
+                                                    .DefaultIfEmpty()
+                                                  select new
+                                                  {
+                                                      location.Id,
+                                                      location.ApiId,
+                                                      date = weather == null ? DateTime.MinValue : weather.Date
+                                                  } into locationAndDate
+                                                  group locationAndDate by new { locationAndDate.Id, locationAndDate.ApiId } into locationAndDateGroup
+                                                  select new
+                                                  {
+                                                      locationAndDateGroup.Key.Id,
+                                                      locationAndDateGroup.Key.ApiId,
+                                                      lastUpdate = locationAndDateGroup.Max(e => e.date)
+                                                  })
                                                  .ToList();
 
                 var result = await _openWeatherConsumer.GetRequest(locationAndWeatherMaxDates.Select(e => e.ApiId).ToArray());
@@ -61,12 +65,20 @@ namespace BatchQueue.Jobs
                         continue;
                     }
 
-                    _repository.WeatherEntry.Add(new WeatherEntryModel
+                    _repository.WeatherAttribute.Add(new WeatherAttributeModel
                     {
-                        LocationId = location.Id,
                         Date = item.Date,
-                        Temperature = item.Temperature,
-                        WindSpeed = item.WindSpeed
+                        LocationId = location.Id,
+                        TypeId = (int)AttributeType.TemperatureCelsius,
+                        ValueDouble = item.Temperature
+                    });
+
+                    _repository.WeatherAttribute.Add(new WeatherAttributeModel
+                    {
+                        Date = item.Date,
+                        LocationId = location.Id,
+                        TypeId = (int)AttributeType.WindSpeedMs,
+                        ValueDouble = item.WindSpeed
                     });
 
                     _logger.LogInformation($"Api result sent to DB: {item.Date} {item.LocationApiId}, {item.Temperature}, {item.WindSpeed}");

@@ -9,6 +9,9 @@ namespace DataAccessLayer.Repositories
         private WeatherContext _dbContext;
         private ILocationRepository _location;
         private IWeatherEntryRepository _weatherEntry;
+        private IWeatherAttributeRepository _weatherAttribute;
+        private IWeatherAttributeTypeRepository _weatherAttributeType;
+
         public ILocationRepository Location
         {
             get
@@ -29,6 +32,30 @@ namespace DataAccessLayer.Repositories
                     _weatherEntry = new WeatherEntryRepository(_dbContext);
                 }
                 return _weatherEntry;
+            }
+        }
+
+        public IWeatherAttributeRepository WeatherAttribute
+        {
+            get
+            {
+                if (_weatherAttribute == null)
+                {
+                    _weatherAttribute = new WeatherAttributeRepository(_dbContext);
+                }
+                return _weatherAttribute;
+            }
+        }
+
+        public IWeatherAttributeTypeRepository WeatherAttributeType
+        {
+            get
+            {
+                if (_weatherAttributeType == null)
+                {
+                    _weatherAttributeType = new WeatherAttributeTypeRepository(_dbContext);
+                }
+                return _weatherAttributeType;
             }
         }
 

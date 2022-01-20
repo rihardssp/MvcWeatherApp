@@ -3,12 +3,11 @@
 } from "chart.js/dist/chart.js";
 
 // Simplifies the creation of chart by providing a single function interface
-export function CreateChart(canvasId, chartType, labels, datasets) {
+export function CreateChart(canvasId, chartType, datasets) {
     let canvasItem = $(`#${canvasId}`);
     const config = {
         type: chartType,
         data: {
-            labels: labels,
             datasets: datasets
         },
         options: {
@@ -16,6 +15,22 @@ export function CreateChart(canvasId, chartType, labels, datasets) {
                 if (canvasItem.hasClass("chartutil-pointer")) {
                     canvasItem.css("cursor", activeElements[0] ? "pointer" : "default");
                 }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        beforeLabel: function (item) {
+                            const datasetItem = item.dataset.data[item.dataIndex];
+                            if (datasetItem && datasetItem.tooltip) {
+                                return datasetItem.tooltip;
+                            }
+                        }
+                    }
+                }
+            },
+            parsing: {
+                xAxisKey: 'label',
+                yAxisKey: 'value'
             }
         }
     };
@@ -28,6 +43,8 @@ export function CreateChart(canvasId, chartType, labels, datasets) {
         canvasItem[0],
         config
     );
+
+    console.log(chart);
 
     canvasItem.trigger(initializeGraphEventType, [chart]);
     return chart;
@@ -51,6 +68,7 @@ export function ListenInitializationEvent(canvasId, action) {
     }
 
     canvas.on(initializeGraphEventType, function (event, data) {
+        // TODO: remove log
         console.log("FiredInitEvent");
         action(data);
     });

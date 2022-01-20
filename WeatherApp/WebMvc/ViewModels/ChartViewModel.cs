@@ -7,8 +7,7 @@ namespace WebMvc.ViewModels
         public string Id { get; set; }
         public string Description { get; set; }
         public ChartType ChartType { get; set; }
-        public double[] Values { get; set; }
-        public string[] ChartDescriptions { get; set; }
+        public ChartEntryViewModel[] Data { get; set; }
         public string CssClass { get; set; }
     }
 }

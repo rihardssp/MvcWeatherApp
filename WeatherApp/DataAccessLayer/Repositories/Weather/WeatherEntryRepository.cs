@@ -4,9 +4,9 @@ using DataAccessLayer.RepositoryAbstractions;
 
 namespace DataAccessLayer.Repositories.Weather
 {
-    public class WeatherEntryRepository : RepositoryBase<WeatherEntryModel>, IWeatherEntryRepository
+    public class WeatherAttributeRepository : RepositoryBase<WeatherAttributeModel>, IWeatherAttributeRepository
     {
-        public WeatherEntryRepository(WeatherContext dbContext) : base(dbContext)
+        public WeatherAttributeRepository(WeatherContext dbContext) : base(dbContext)
         {
         }
     }

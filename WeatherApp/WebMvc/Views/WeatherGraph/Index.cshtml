@@ -1,55 +1,35 @@
 ﻿@model IEnumerable<WebMvc.ViewModels.WeatherGraphItemViewModel>
 
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Weather graphs";
 }
 
 <h1>Weather graphs</h1>
 <!-- TODO: This requires pagination -->
 <div>
-    @await Html.PartialAsync("_Chart", new WebMvc.ViewModels.ChartViewModel
-    {
-        Description = "Minimum temperature (celsius)",
-        Id = "temperature",
-        Values = Model.Select(e => e.MinimumTemperature).ToArray(),
-        ChartDescriptions = Model.Select(e => e.Location.City).ToArray(),
-        ChartType = WebMvc.Code.Enums.ChartType.bar,
-        CssClass = "chartutil-pointer"
-    })
-    @await Html.PartialAsync("_Chart", new WebMvc.ViewModels.ChartViewModel
-    {
-        Description = "Maximum wind speed (m/s)",
-        Id = "wind",
-        Values = Model.Select(e => e.MaximumWindSpeed).ToArray(),
-        ChartDescriptions = Model.Select(e => e.Location.City).ToArray(),
-        ChartType = WebMvc.Code.Enums.ChartType.bar,
-        CssClass = "chartutil-pointer"
-    })
+    @foreach (var item in Model) {
+        @await Html.PartialAsync("_Chart", item.ChartModel)
+    }
 </div>
 
 @section Scripts {
     <script src="~/dist/bundle.js"></script>
-    <script>
-        $(function () {
-            const actionIds = [
-                @string.Join(",", Model.Select(e => e.Location.Id))
-            ];
-
-            const clickEventHandler = function (actionUrl, _, affectedElements) {
-                if (affectedElements.length > 0) {
-                    const id = actionIds[affectedElements[0].index];
-                    const url = `${actionUrl}/${id}`;
-                    window.location = url;
-                }
-            };
-
-            ChartUtil.ListenInitializationEvent("wind", function (chart) {
-                ChartUtil.AddEvent(chart, "click", clickEventHandler.bind(undefined, "@Url.Action("WindSpeed", "WeatherTrend")"));
-            });
-
-            ChartUtil.ListenInitializationEvent("temperature", function (chart) {
-                ChartUtil.AddEvent(chart, "click", clickEventHandler.bind(undefined, "@Url.Action("Temperature", "WeatherTrend")"));
-            });
-        });
-    </script>
+    @foreach (var item in Model) {
+        <script>
+             $(function () {
+                    ChartUtil.ListenInitializationEvent("@item.ChartModel.Id", function (chart) {
+                        ChartUtil.AddEvent(chart, "click", function(_, affectedElements) {
+                            if (affectedElements.length > 0) {
+                                const id = affectedElements[0].element.$context.raw.actionId;
+                                if (id === undefined) {
+                                    throw "Action Id is undefined for given data!";
+                                }
+                                
+                                window.location = `@item.ActionUrl/${id}`;
+                            }
+                        });
+                    });
+                });
+        </script>
+    }
 }

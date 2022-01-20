@@ -46,6 +46,7 @@ namespace WebMvc
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WeatherContext context)
         {
             // TODO: move all scripts to webpack?
+            // TODO: Add volume to DB to persist data
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -10,6 +10,8 @@ namespace DataAccessLayer.Repositories
     {
         ILocationRepository Location { get; }
         IWeatherEntryRepository WeatherEntry { get; }
+        IWeatherAttributeRepository WeatherAttribute { get; }
+        IWeatherAttributeTypeRepository WeatherAttributeType { get; }
         Task<int> SaveChangesAsync();
     }
 }

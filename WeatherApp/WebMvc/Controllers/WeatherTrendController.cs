@@ -1,6 +1,8 @@
-﻿using DataAccessLayer.Models;
+﻿using DataAccessLayer.Enums;
+using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace WebMvc.Controllers
             _repository = repository;
         }
 
-        private IActionResult GetTrend(int id, Func<WeatherEntryModel, double> valueSelector, string description)
+        private IActionResult GetTrend(int id, AttributeType type, string description)
         {
             var location = _repository.Location.FindAll().FirstOrDefault(e => e.Id == id);
 
@@ -27,21 +29,29 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
+            // TODO: Move this to configuration. 
             var dateFrom = DateTime.Now.AddHours(-2);
             var dateTo = DateTime.Now;
-
-            var data = _repository.WeatherEntry.FindAll()
-                .Where(e => e.LocationId == location.Id && e.Date >= dateFrom)
-                .Select(e => new TrendItemEntry { Value = valueSelector(e), Date = e.Date })
-                .OrderBy(e => e.Date)
-                .ToList();
-
             var dateFormat = dateFrom.Day == dateTo.Day ? "HH:mm" : "ddd HH:mm";
 
-            return View("Trend", new TrendViewModel { Entries = data, ChartDescription = description, 
-                DateFrom = dateFrom, 
+            var data = _repository.WeatherAttribute.FindAll()
+                .Where(e => e.LocationId == location.Id && e.Date >= dateFrom && e.TypeId == (int)type)
+                .OrderBy(e => e.Date)
+                .Select(e => new ChartEntryViewModel
+                { 
+                    Value = e.ValueDouble,
+                    Label = e.Date.ToString(dateFormat)
+                })
+                .ToArray();
+
+            return View("Trend", new TrendViewModel
+            {
+                Data = data,
+                ChartDescription = description,
+                DateFrom = dateFrom,
                 DateTo = dateTo,
-                DateFormat = dateFormat
+                DateFormat = dateFormat,
+                Description = $"{location.City}, {location.Country}"
             });
         }
 
@@ -49,13 +59,13 @@ namespace WebMvc.Controllers
         public IActionResult Temperature([FromRoute] int id)
         {
             // TODO: prehaps move the descriptions to a resource file?
-            return GetTrend(id, e => e.Temperature, "Temperature (Celsius)");
+            return GetTrend(id, AttributeType.TemperatureCelsius, "Temperature (Celsius)");
         }
 
         [Route("[action]/{id}")]
         public IActionResult WindSpeed([FromRoute] int id)
         {
-            return GetTrend(id, e => e.WindSpeed, "Wind speed (m/sec)");
+            return GetTrend(id, AttributeType.WindSpeedMs, "Wind speed (m/sec)");
         }
     }
 }
