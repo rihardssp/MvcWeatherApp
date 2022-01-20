@@ -18,12 +18,10 @@ namespace BatchQueue
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            
         }
 
-        private static IHostBuilder CreateHostBuilder(string[] args) 
-        {
-            return Host.CreateDefaultBuilder(args)
+        private static IHostBuilder CreateHostBuilder(string[] args) => 
+            Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                     services.AddDbContext<WeatherContext>(options =>
                         options.UseSqlServer(context.Configuration.GetConnectionString("WeatherContext")))
@@ -39,6 +37,6 @@ namespace BatchQueue
                         });
                     })
                     .AddQuartzHostedService());
-        }
+        
     }
 }

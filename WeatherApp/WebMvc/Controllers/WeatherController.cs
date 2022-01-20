@@ -19,7 +19,7 @@ namespace WebMvc.Controllers
         // GET: Weather
         public async Task<IActionResult> Index()
         {
-            return View(await _repository.WeatherEntry.FindAll().ToListAsync());
+            return View(await _repository.WeatherEntry.FindAll().Include(e => e.Location).ToListAsync());
         }
 
         // GET: Weather/Details/5

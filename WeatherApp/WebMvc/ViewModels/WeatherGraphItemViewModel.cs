@@ -3,7 +3,7 @@ using System;
 
 namespace WebMvc.ViewModels
 {
-    public class WeatherExtremesViewModel
+    public class WeatherGraphItemViewModel
     {
         public LocationModel Location { get; set; }
         public DateTime LastUpdate { get; set; }

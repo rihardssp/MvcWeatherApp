@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Services.HttpServices.Services.Weather
 {
+    // TODO: Important - check which date is being used here. Should convert to local.
     public class OpenWeatherApiConsumer : IWeatherApiConsumer
     {
         private IWeatherApiConsumerConfiguration _configuration;

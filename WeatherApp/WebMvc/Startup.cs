@@ -6,6 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Contexts;
 using DataAccessLayer.Extensions;
+using Microsoft.Extensions.WebEncoders;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace WebMvc
 {
@@ -31,11 +34,18 @@ namespace WebMvc
                     options.UseSqlServer(Configuration.GetConnectionString("WeatherContext")));
 
             services.UseRepositories();
+
+            // Removed encoding of unicode chars, while retaining the encoding to avoid xss
+            services.Configure<WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WeatherContext context)
         {
+            // TODO: move all scripts to webpack?
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

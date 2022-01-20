@@ -1,0 +1,21 @@
+﻿@model WebMvc.ViewModels.TrendViewModel
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>Latest weather data: (@Model.DateFrom.ToString(Model.DateFormat) - @Model.DateTo.ToString(Model.DateFormat))</h1>
+<div>
+    @await Html.PartialAsync("_Chart", new WebMvc.ViewModels.ChartViewModel
+    {
+        Description = Model.ChartDescription,
+        Id = "chart",
+        Values = Model.Entries.Select(e => e.Value).ToArray(),
+        ChartDescriptions = Model.Entries.Select(e => e.Date.ToString(Model.DateFormat)).ToArray(),
+        ChartType = WebMvc.Code.Enums.ChartType.line
+    })
+</div>
+
+@section Scripts {
+    <script src="~/dist/bundle.js"></script>
+}

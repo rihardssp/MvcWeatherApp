@@ -23,7 +23,7 @@
         </entry>
       </job-data-map>
     </job>
-
+    <!-- TODO: Change to proper cron trigger. -->
     <trigger>
       <simple>
         <name>UpdateWeatherTrigger</name>
@@ -32,7 +32,7 @@
         <job-group>UpdateJobGroup</job-group>
         <misfire-instruction>IgnoreMisfirePolicy</misfire-instruction>
         <repeat-count>-1</repeat-count>
-        <repeat-interval>600000</repeat-interval>
+        <repeat-interval>300000</repeat-interval>
       </simple>
     </trigger>
   </schedule>

@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Services.HttpServices.Abstractions.Weather;
@@ -29,29 +30,30 @@ namespace BatchQueue.Jobs
         {
             try
             {
+                var locationAndWeatherMaxDates = (from location in _repository.Location.FindAll()
+                                                 from weather in _repository.WeatherEntry.FindAll()
+                                                   .Where(e => e.LocationId == location.Id)
+                                                   .DefaultIfEmpty()
+                                                 select new
+                                                 {
+                                                     location.Id,
+                                                     location.ApiId,
+                                                     date = weather == null ? DateTime.MinValue : weather.Date
+                                                 } into locationAndDate
+                                                 group locationAndDate by new { locationAndDate.Id, locationAndDate.ApiId } into locationAndDateGroup
+                                                 select new
+                                                 {
+                                                     locationAndDateGroup.Key.Id,
+                                                     locationAndDateGroup.Key.ApiId,
+                                                     lastUpdate = locationAndDateGroup.Max(e => e.date)
+                                                 })
+                                                 .ToList();
 
-                var locationsAndLastUpdates = (from weather in _repository.WeatherEntry.FindAll()
-                                              group weather by weather.LocationId into weatherGroup
-                                              select new
-                                              {
-                                                  weatherGroup.Key,
-                                                  lastUpdate = weatherGroup.Max(e => e.Date)
-                                              } into lastUpdate
-                                              join location in _repository.Location.FindAll()
-                                                  on lastUpdate.Key equals location.Id
-                                              select new
-                                              {
-                                                  Id = lastUpdate.Key,
-                                                  lastUpdate.lastUpdate,
-                                                  location.ApiId
-                                              })
-                                              .ToList();
-
-                var result = await _openWeatherConsumer.GetRequest(locationsAndLastUpdates.Select(e => e.ApiId).ToArray());
+                var result = await _openWeatherConsumer.GetRequest(locationAndWeatherMaxDates.Select(e => e.ApiId).ToArray());
                 foreach(var item in result)
                 {
                     // Do not put in duplicates or entries in the past. This job only updates current (latest) entries.
-                    var location = locationsAndLastUpdates.FirstOrDefault(e => e.ApiId == item.LocationApiId);
+                    var location = locationAndWeatherMaxDates.FirstOrDefault(e => e.ApiId == item.LocationApiId);
                     if (location == null || location.lastUpdate >= item.Date)
                     {
                         var reason = location == null ? "location is null" : $"last update was '{location.lastUpdate}', however received '{item.Date}'. New entry should be newer than the latest.";
