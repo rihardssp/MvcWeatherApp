@@ -49,9 +49,15 @@ namespace Services.HttpServices.Services.Weather
                             LocationApiId = content.City.Id,
                             Cloudiness = content.Clouds.Value
                         });
-                    } catch(Exception e)
+
+                    }
+                    catch (OpenWeatherMapException e)
                     {
-                        _logger.LogError($"Failed to acquire data for '{id}'", e);
+                        _logger.LogError($"Failed to acquire data for '{id}'. {e.Response.ReasonPhrase}", e);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"Failed to acquire data for '{id}'.", e);
                     }
 
                     // Some throttle to avoid any issues with too many requests
