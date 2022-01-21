@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
+using System;
 
 namespace BatchQueue
 {
@@ -35,7 +36,8 @@ namespace BatchQueue
                     {
                         quartz.UseMicrosoftDependencyInjectionJobFactory();
                         quartz.UseDefaultThreadPool(options => options.SetProperty("quartz.threadPool.threadCount", "2"));
-                        quartz.UseXmlSchedulingConfiguration(options => {
+                        quartz.UseXmlSchedulingConfiguration(options =>
+                        {
                             options.FailOnFileNotFound = true;
                             options.Files = new string[] { "Schedule/Data.xml" };
                         });

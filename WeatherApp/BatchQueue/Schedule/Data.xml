@@ -17,15 +17,15 @@
       <recover>false</recover>
     </job>
     <trigger>
-      <simple>
+      <cron>
         <name>UpdateWeatherTrigger</name>
         <group>UpdateTriggersGroup</group>
         <job-name>UpdateWeatherDataJob</job-name>
         <job-group>UpdateJobGroup</job-group>
         <misfire-instruction>IgnoreMisfirePolicy</misfire-instruction>
-        <repeat-count>-1</repeat-count>
-        <repeat-interval>900000</repeat-interval>
-      </simple>
+		<!-- Every 15 minutes, with a 2 minute delay at the start -->
+        <cron-expression>0 2/15 * * * ?</cron-expression>
+      </cron>
     </trigger>
   </schedule>
 

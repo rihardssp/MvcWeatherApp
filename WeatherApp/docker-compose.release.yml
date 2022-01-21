@@ -3,16 +3,15 @@ version: '3.4'
 services:
   webmvc:
     image: ${DOCKER_REGISTRY-}sprihards/weather_app_mvc:v1.21.1.22.3
-    build:
-      context: .
-      dockerfile: WebMvc/Dockerfile
     depends_on:
       - db
+  environment:
+    - ASPNETCORE_ENVIRONMENT=Development
+    - ASPNETCORE_URLS=http://+:80
+  ports:
+    - "80:80"
   batchqueue:
     image: ${DOCKER_REGISTRY-}sprihards/weather_app_batchqueue:v1.21.1.22.3
-    build:
-      context: .
-      dockerfile: BatchQueue/Dockerfile
     environment:
       WeatherApiConsumerConfiguration__ApiId: "8cc7bc078bc177ddd9d1deb683e9045e"
     depends_on:
