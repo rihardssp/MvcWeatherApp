@@ -5,8 +5,8 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["BatchQueue.csproj", "BatchQueue/"]
-RUN dotnet restore "BatchQueue.csproj"
+COPY ["BatchQueue/BatchQueue.csproj", "BatchQueue/"]
+RUN dotnet restore "BatchQueue/BatchQueue.csproj"
 COPY . .
 WORKDIR "/src/BatchQueue"
 RUN dotnet build "BatchQueue.csproj" -c Release -o /app/build

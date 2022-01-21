@@ -33,7 +33,7 @@ namespace BatchQueue
                         quartz.UseDefaultThreadPool(options => options.SetProperty("quartz.threadPool.threadCount", "2"));
                         quartz.UseXmlSchedulingConfiguration(options => {
                             options.FailOnFileNotFound = true;
-                            options.Files = new string[] { "schedule/data.xml" };
+                            options.Files = new string[] { "Schedule/Data.xml" };
                         });
                     })
                     .AddQuartzHostedService());

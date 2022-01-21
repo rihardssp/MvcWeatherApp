@@ -6,11 +6,20 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+
+# install NodeJS 13.x
+# see https://github.com/nodesource/distributions/blob/master/README.md#deb
+RUN apt-get update -yq 
+RUN apt-get install curl gnupg -yq 
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+
 WORKDIR /src
 COPY ["WebMvc/WebMvc.csproj", "WebMvc/"]
 RUN dotnet restore "WebMvc/WebMvc.csproj"
 COPY . .
 WORKDIR "/src/WebMvc"
+RUN npm i
 RUN dotnet build "WebMvc.csproj" -c Release -o /app/build
 
 FROM build AS publish
