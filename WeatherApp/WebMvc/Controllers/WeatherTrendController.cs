@@ -47,6 +47,14 @@ namespace WebMvc.Controllers
                 })
                 .ToArray();
 
+            var cloudiness = _repository.WeatherAttribute.FindAll()
+                .Where(e => e.LocationId == id && e.TypeId == (int)AttributeType.CloudinessPercentage)
+                .FirstOrDefault();
+
+            var cloudinessText = cloudiness == null ? "No cloudiness data available"
+                : $"On {cloudiness.Date.ToString(_dateTimeUtil.FullFormat)} UTC cloudiness in " +
+                $"{location.City} was {(int)Math.Truncate(cloudiness.ValueDouble)}%";
+
             return View("Trend", new TrendViewModel
             {
                 Data = data,
@@ -54,7 +62,8 @@ namespace WebMvc.Controllers
                 DateFrom = dateFrom,
                 DateTo = dateTo,
                 DateFormat = dateFormat,
-                Description = $"{location.City}, {location.Country}"
+                Description = $"{location.City}, {location.Country}",
+                Cloudiness = cloudinessText
             });
         }
 

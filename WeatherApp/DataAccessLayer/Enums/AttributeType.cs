@@ -2,7 +2,8 @@
 {
     public enum AttributeType
     {
-        WindSpeedMs,
-        TemperatureCelsius
+        WindSpeedMs = 0,
+        TemperatureCelsius = 1,
+        CloudinessPercentage = 2
     }
 }

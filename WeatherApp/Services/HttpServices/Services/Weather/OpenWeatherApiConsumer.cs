@@ -46,7 +46,8 @@ namespace Services.HttpServices.Services.Weather
                             Temperature = content.Temperature.Value,
                             Date = content.LastUpdate.Value,
                             WindSpeed = content.Wind.Speed.Value,
-                            LocationApiId = content.City.Id
+                            LocationApiId = content.City.Id,
+                            Cloudiness = content.Clouds.Value
                         });
                     } catch(Exception e)
                     {

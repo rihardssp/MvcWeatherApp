@@ -13,5 +13,6 @@ namespace WebMvc.ViewModels
         public string ChartDescription { get; set; }
         public string Description { get; set; }
         public ChartEntryViewModel[] Data { get; set; }
+        public string Cloudiness { get; set; }
     }
 }

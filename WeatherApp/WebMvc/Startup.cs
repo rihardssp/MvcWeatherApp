@@ -50,7 +50,6 @@ namespace WebMvc
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WeatherContext context)
         {
-            // TODO: Add volume to DB to persist data
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

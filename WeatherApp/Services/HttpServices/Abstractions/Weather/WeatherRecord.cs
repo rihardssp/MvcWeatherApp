@@ -11,7 +11,9 @@ namespace Services.HttpServices.Abstractions.Weather
         public double WindSpeed { get; set; }
         public double Temperature { get; set; }
         public int LocationApiId { get; set; }
+        public double Cloudiness { get; set; }
         public DateTime Date { get; set; }
+
         internal static WeatherRecord MapRecord(List data)
         {
             var date = DateTimeOffset.FromUnixTimeSeconds(data.Dt).DateTime;
@@ -20,7 +22,8 @@ namespace Services.HttpServices.Abstractions.Weather
                 WindSpeed = data.Wind.Speed,
                 Temperature = data.Main.Temp,
                 LocationApiId = data.Id,
-                Date = date
+                Date = date,
+                Cloudiness = data.Clouds.All
             };
         }
     }

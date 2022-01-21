@@ -5,6 +5,7 @@
 }
 
 <h1>Latest weather data in @Model.Description: UTC (@Model.DateFrom.ToString(Model.DateFormat) - @Model.DateTo.ToString(Model.DateFormat))</h1>
+<h3>@Model.Cloudiness</h3>
 <div>
     @await Html.PartialAsync("_Chart", new WebMvc.ViewModels.ChartViewModel
     {

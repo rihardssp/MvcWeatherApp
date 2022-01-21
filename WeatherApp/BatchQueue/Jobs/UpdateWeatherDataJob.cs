@@ -32,8 +32,7 @@ namespace BatchQueue.Jobs
             try
             {
                 _logger.LogInformation($"Job running at {DateTime.UtcNow}");
-                // TODO: add cloud data?
-                var attributeTypes = new int[] { (int)AttributeType.TemperatureCelsius, (int)AttributeType.WindSpeedMs };
+                var attributeTypes = new int[] { (int)AttributeType.TemperatureCelsius, (int)AttributeType.WindSpeedMs, (int)AttributeType.CloudinessPercentage };
                 var locationAndWeatherMaxDates = (from location in _repository.Location.FindAll()
                                                   from weather in _repository.WeatherAttribute.FindAll()
                                                     .Where(e => e.LocationId == location.Id && (attributeTypes.Contains(e.TypeId)))
@@ -79,6 +78,14 @@ namespace BatchQueue.Jobs
                         LocationId = location.Id,
                         TypeId = (int)AttributeType.WindSpeedMs,
                         ValueDouble = item.WindSpeed
+                    });
+
+                    _repository.WeatherAttribute.Add(new WeatherAttributeModel
+                    {
+                        Date = item.Date,
+                        LocationId = location.Id,
+                        TypeId = (int)AttributeType.CloudinessPercentage,
+                        ValueDouble = item.Cloudiness
                     });
 
                     _logger.LogInformation($"Api result sent to DB: {item.Date} {item.LocationApiId}, {item.Temperature}, {item.WindSpeed}");

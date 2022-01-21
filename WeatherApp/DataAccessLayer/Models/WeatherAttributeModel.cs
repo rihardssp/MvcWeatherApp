@@ -23,7 +23,6 @@ namespace DataAccessLayer.Models
         [ForeignKey("Type")]
         public int TypeId { get; set; }
         public WeatherAttributeTypeModel Type { get; set; }
-
         public double ValueDouble { get; set; }
     }
 }
