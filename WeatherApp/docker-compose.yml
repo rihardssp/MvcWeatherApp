@@ -2,14 +2,14 @@ version: '3.4'
 
 services:
   webmvc:
-    image: weathertestapp/${DOCKER_REGISTRY-}webmvc
+    image: ${DOCKER_REGISTRY-}sprihards/weather_app_mvc:latest
     build:
       context: .
       dockerfile: WebMvc/Dockerfile
     depends_on:
       - db
   batchqueue:
-    image: weathertestapp/${DOCKER_REGISTRY-}batchqueue
+    image: ${DOCKER_REGISTRY-}sprihards/weather_app_batchqueue:latest
     build:
       context: .
       dockerfile: BatchQueue/Dockerfile
@@ -17,7 +17,7 @@ services:
       - db
       - webmvc
   db:
-    image: weathertestapp/mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2019-latest
     user: root
     environment:
       ACCEPT_EULA: Y
