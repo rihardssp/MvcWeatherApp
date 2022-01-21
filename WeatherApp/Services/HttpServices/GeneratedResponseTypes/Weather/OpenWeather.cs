@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 /// <summary>
 /// Generated from https://json2csharp.com/
-/// 
+/// Not the best approach, but given that said api handle is not supported..
 /// </summary>
 namespace Services.HttpServices.GeneratedResponseTypes.Weather
 {

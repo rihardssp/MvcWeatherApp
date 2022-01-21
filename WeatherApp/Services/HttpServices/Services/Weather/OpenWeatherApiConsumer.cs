@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenWeatherMap;
+using Services.Extensions;
 using Services.HttpServices.Abstractions.Weather;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,16 @@ using System.Threading.Tasks;
 
 namespace Services.HttpServices.Services.Weather
 {
-    // TODO: Important - check which date is being used here. Should convert to local.
+    /// <summary>
+    /// Consumes openweathermap.org/current
+    /// Didn't find any service that was:
+    /// 1) Free,
+    /// 2) Provided updates less than 1h apart
+    /// 3) Allowed multiple cities to be queried at once
+    /// 
+    /// Hence the implementation is a bit awkward
+    /// 
+    /// </summary>
     public class OpenWeatherApiConsumer : IWeatherApiConsumer
     {
         private IWeatherApiConsumerConfiguration _configuration;
@@ -19,12 +29,7 @@ namespace Services.HttpServices.Services.Weather
             _logger = logger;
         }
 
-        /// <summary>
-        /// TODO: Add cancellation token
-        /// </summary>
-        /// <param name="locationIds"></param>
-        /// <returns></returns>
-        public async Task<IList<WeatherRecord>> GetRequest(params int[] locationIds)
+        public async Task<IList<WeatherRecord>> SendRequest(params int[] locationIds)
         {
             try
             {
@@ -33,14 +38,23 @@ namespace Services.HttpServices.Services.Weather
 
                 foreach (var id in locationIds)
                 {
-                    var content = await client.CurrentWeather.GetByCityId(id, MetricSystem.Metric, OpenWeatherMapLanguage.EN);
-                    result.Add(new WeatherRecord
+                    try
                     {
-                        Temperature = content.Temperature.Value,
-                        Date = content.LastUpdate.Value,
-                        WindSpeed = content.Wind.Speed.Value,
-                        LocationApiId = content.City.Id
-                    });
+                        var content = await client.CurrentWeather.GetByCityId(id, _configuration.MetricSystem.ToOpenWeatherEnum(), OpenWeatherMapLanguage.EN);
+                        result.Add(new WeatherRecord
+                        {
+                            Temperature = content.Temperature.Value,
+                            Date = content.LastUpdate.Value,
+                            WindSpeed = content.Wind.Speed.Value,
+                            LocationApiId = content.City.Id
+                        });
+                    } catch(Exception e)
+                    {
+                        _logger.LogError($"Failed to acquire data for '{id}'", e);
+                    }
+
+                    // Some throttle to avoid any issues with too many requests
+                    await Task.Delay(_configuration.Throttle);
                 }
 
                 return result;

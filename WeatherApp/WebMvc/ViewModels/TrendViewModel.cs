@@ -2,6 +2,9 @@
 
 namespace WebMvc.ViewModels
 {
+    /// <summary>
+    /// Used in displaying trend data in the last few hours
+    /// </summary>
     public class TrendViewModel
     {
         public DateTime DateFrom { get; set; }

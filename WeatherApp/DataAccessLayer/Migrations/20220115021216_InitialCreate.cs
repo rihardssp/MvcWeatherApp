@@ -1,4 +1,5 @@
 ﻿using System;
+using DataAccessLayer.MigrationExtensions;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
@@ -48,6 +49,18 @@ namespace DataAccessLayer.Migrations
                 name: "IX_WeatherEntryModel_LocationId",
                 table: "WeatherEntryModel",
                 column: "LocationId");
+
+            // 12 initial locations
+            migrationBuilder.CreateLocation(524901, "Moscow", "Russia");
+            migrationBuilder.CreateLocation(2643743, "London", "Great Britain");
+            migrationBuilder.CreateLocation(2643736, "Derry", "Great Britain");
+            migrationBuilder.CreateLocation(524809, "Mostovskoy", "Russia");
+            migrationBuilder.CreateLocation(3202058, "Destrnik", "Slovenia");
+            migrationBuilder.CreateLocation(3186557, "Žetale", "Slovenia");
+            migrationBuilder.CreateLocation(5379566, "Orangevale", "USA");
+            migrationBuilder.CreateLocation(5385793, "Ramona", "USA");
+            migrationBuilder.CreateLocation(6552025, "Hörup", "Germany");
+            migrationBuilder.CreateLocation(6552023, "Harrislee", "Germany");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

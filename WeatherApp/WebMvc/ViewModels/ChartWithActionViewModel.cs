@@ -1,9 +1,11 @@
 ﻿namespace WebMvc.ViewModels
 {
-    public class WeatherGraphItemViewModel
+    /// <summary>
+    /// Used in displaying charts with a frontend action
+    /// </summary>
+    public class ChartWithActionViewModel
     {
         public ChartViewModel ChartModel { get; set; }
         public string ActionUrl { get; set; }
-        public int[] ActionIds { get; set; }
     }
 }

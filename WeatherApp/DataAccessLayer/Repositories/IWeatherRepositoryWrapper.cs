@@ -9,7 +9,6 @@ namespace DataAccessLayer.Repositories
     public interface IWeatherRepositoryWrapper
     {
         ILocationRepository Location { get; }
-        IWeatherEntryRepository WeatherEntry { get; }
         IWeatherAttributeRepository WeatherAttribute { get; }
         IWeatherAttributeTypeRepository WeatherAttributeType { get; }
         Task<int> SaveChangesAsync();

@@ -2,6 +2,9 @@
 
 namespace WebMvc.ViewModels
 {
+    /// <summary>
+    /// Full data of partial view _Chart
+    /// </summary>
     public class ChartViewModel
     {
         public string Id { get; set; }

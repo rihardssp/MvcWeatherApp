@@ -4,8 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebMvc</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
@@ -29,9 +27,6 @@
                                 Helper tool
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-area="" asp-controller="Weather" asp-action="Index">Weather entry list</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Weather" asp-action="Create">Create weather entry</a>
-                                <div class="dropdown-divider"> </div>
                                 <a class="dropdown-item" asp-area="" asp-controller="Location" asp-action="Index">Location entry list</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Location" asp-action="Create">Create location entry</a>
                             </div>
@@ -40,9 +35,7 @@
                 </div>
             </div>
         </nav>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/dist/bundle.js"></script>
         @RenderSection("Scripts", required: false)
     </header>
     <div class="container">

@@ -1,5 +1,8 @@
 ﻿namespace WebMvc.ViewModels
 {
+    /// <summary>
+    /// Data to be displayed in charts
+    /// </summary>
     public class ChartEntryViewModel
     {
         public double Value { get; set; }

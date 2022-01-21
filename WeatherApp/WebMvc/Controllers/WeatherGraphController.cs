@@ -2,9 +2,11 @@
 using DataAccessLayer.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 using WebMvc.Code.Enums;
+using WebMvc.Configuration;
 using WebMvc.ViewModels;
 
 namespace WebMvc.Controllers
@@ -12,81 +14,84 @@ namespace WebMvc.Controllers
     public class WeatherGraphController : Controller
     {
         private readonly WeatherContext _context;
-        public WeatherGraphController(WeatherContext context)
+        private readonly IDateTimeConfiguration _dateTimeUtil;
+        public WeatherGraphController(WeatherContext context, IOptions<DateTimeConfiguration> dateTimeUtil)
         {
+            _dateTimeUtil = dateTimeUtil.Value;
             _context = context;
         }
 
         public IActionResult Index()
         {
+            var allowedTypes = new int[] { (int)AttributeType.TemperatureCelsius, (int)AttributeType.WindSpeedMs };
+
             var query = from weather in _context.WeatherAttributeModel.AsNoTracking()
-                         group weather by new { weather.LocationId, weather.TypeId } into locationGroup
-                         select new
-                         {
-                             locationGroup.Key.LocationId,
-                             locationGroup.Key.TypeId,
-                             minimumValue = locationGroup.Min(e => e.ValueDouble),
-                             maximumValue = locationGroup.Max(e => e.ValueDouble),
-                             LastUpdate = locationGroup.Max(e => e.Date)
-                         } into groupedValues
-                         join location in _context.LocationModel.AsNoTracking()
-                             on groupedValues.LocationId equals location.Id
-                         select new
-                         {
-                             Location = location,
-                             Minimum = groupedValues.minimumValue,
-                             Maximum = groupedValues.maximumValue,
-                             TypeId = groupedValues.TypeId,
-                             LastUpdate = groupedValues.LastUpdate
-                         };
+                        where allowedTypes.Contains(weather.TypeId)
+                        group weather by new { weather.LocationId, weather.TypeId } into locationGroup
+                        select new
+                        {
+                            locationGroup.Key.LocationId,
+                            locationGroup.Key.TypeId,
+                            minimumValue = locationGroup.Min(e => e.ValueDouble),
+                            maximumValue = locationGroup.Max(e => e.ValueDouble),
+                            LastUpdate = locationGroup.Max(e => e.Date)
+                        } into groupedValues
+                        join location in _context.LocationModel.AsNoTracking()
+                            on groupedValues.LocationId equals location.Id
+                        select new
+                        {
+                            Location = location,
+                            Minimum = groupedValues.minimumValue,
+                            Maximum = groupedValues.maximumValue,
+                            TypeId = groupedValues.TypeId,
+                            LastUpdate = groupedValues.LastUpdate
+                        } into finalData
+                        orderby finalData.Location.Country
+                        orderby finalData.Location.City
+                        select finalData;
 
-            var data = query.OrderBy(e => e.Location.City);
-            var data2 = data.ToList();
+            // call DB only once
+            var data = query.ToList();
+            var temperatureData = data.Where(e => e.TypeId == (int)AttributeType.TemperatureCelsius)
+                .Select(e => new ChartEntryViewModel
+                {
+                    Label = e.Location.City,
+                    Value = e.Minimum,
+                    Tooltip = new string[] { $"Last update (UTC): {e.LastUpdate.ToString(_dateTimeUtil.FullFormat)}", $"Country: {e.Location.Country}" },
+                    ActionId = e.Location.Id
+                })
+                .ToArray();
 
-            var dataTemp = data2.Where(e => e.TypeId == (int)AttributeType.TemperatureCelsius);
-            var dataWind = data2.Where(e => e.TypeId == (int)AttributeType.WindSpeedMs);
+            var windData = data.Where(e => e.TypeId == (int)AttributeType.WindSpeedMs)
+                .Select(e => new ChartEntryViewModel
+                {
+                    Label = e.Location.City,
+                    Value = e.Maximum,
+                    Tooltip = new string[] { $"Last update (UTC): {e.LastUpdate.ToString(_dateTimeUtil.FullFormat)}", $"Country: {e.Location.Country}" },
+                    ActionId = e.Location.Id
+                })
+                .ToArray();
 
-            var temperatureList = new WeatherGraphItemViewModel
+            return View(new List<ChartWithActionViewModel> {
+                CreateChartViewModel("temperature", "Minimum temperature (celsius)", temperatureData, nameof(WeatherTrendController.Temperature)),
+                CreateChartViewModel("wind", "Maximum wind speed (m/s)", windData, nameof(WeatherTrendController.WindSpeed))
+            });
+        }
+
+        private ChartWithActionViewModel CreateChartViewModel(string id, string description, ChartEntryViewModel[] data, string controllerMethodName)
+        {
+            return new ChartWithActionViewModel
             {
                 ChartModel = new ChartViewModel
                 {
-                    Id = "temperature",
+                    Id = id,
                     CssClass = "chartutil-pointer",
-                    Description = "Minimum temperature (celsius)",
+                    Description = description,
                     ChartType = ChartType.bar,
-                    Data = dataTemp
-                        .Select(e => new ChartEntryViewModel { 
-                            Label = e.Location.City, 
-                            Value = e.Minimum, 
-                            Tooltip =  new string[] { $"Last update: {e.LastUpdate.ToString("dd/MM/yyyy HH:mm")}", $"Country: {e.Location.Country}" },
-                            ActionId = e.Location.Id
-                        })
-                        .ToArray()
+                    Data = data
                 },
-                ActionUrl = Url.Action("Temperature", nameof(WeatherTrendController).Replace("Controller", string.Empty))
+                ActionUrl = Url.Action(controllerMethodName, nameof(WeatherTrendController).Replace("Controller", string.Empty)),
             };
-
-            var windList = new WeatherGraphItemViewModel {
-                ChartModel = new ChartViewModel
-                {
-                    Id = "wind",
-                    CssClass = "chartutil-pointer",
-                    Description = "Maximum wind speed (m/s)",
-                    ChartType = ChartType.bar,
-                    Data = dataTemp
-                        .Select(e => new ChartEntryViewModel
-                        {
-                            Label = e.Location.City,
-                            Value = e.Maximum,
-                            Tooltip = new string[] { $"Last update: {e.LastUpdate.ToString("dd/MM/yyyy HH:mm")}", $"Country: {e.Location.Country}" },
-                            ActionId = e.Location.Id
-                        })
-                        .ToArray()
-                },
-                ActionUrl = Url.Action("WindSpeed", nameof(WeatherTrendController).Replace("Controller", string.Empty)),
-            };
-
-            return View(new List<WeatherGraphItemViewModel> { temperatureList, windList });
         }
     }
 }

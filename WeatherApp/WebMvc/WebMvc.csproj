@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="ClientScripts\Css\Site.css" />
     <Content Include="webpack.config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

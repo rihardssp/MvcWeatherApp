@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace DataAccessLayer.MigrationExtensions
 {
+    /// <summary>
+    /// Extending the migration tools for simpler usage. Comes in handy for initial data.
+    /// </summary>
     public class SqlServerMigrationGeneratorExtension : SqlServerMigrationsSqlGenerator
     {
         public SqlServerMigrationGeneratorExtension(
@@ -18,7 +21,8 @@ namespace DataAccessLayer.MigrationExtensions
             MigrationOperation operation,
             IModel model,
             MigrationCommandListBuilder builder)
-        {
+        {               
+            // In V7 switch to switch pattern 
             if (operation is SetIdentityOperation setIdentityOperation)
             {
                 Generate(setIdentityOperation, builder);
@@ -26,6 +30,10 @@ namespace DataAccessLayer.MigrationExtensions
             else if (operation is CreateWeatherAttributeTypeOperation createWeatherType) 
             {
                 Generate(createWeatherType, builder);
+            }
+            else if (operation is CreateLocationOperation createLocationOperation)
+            {
+                Generate(createLocationOperation, builder);
             }
             else
             {
@@ -66,6 +74,33 @@ namespace DataAccessLayer.MigrationExtensions
                 .Append(stringMappingInt.GenerateSqlLiteral(operation.Id))
                 .Append(",")
                 .Append(stringMapping.GenerateSqlLiteral(operation.Name))
+                .Append(")")
+                .AppendLine(sqlHelper.StatementTerminator)
+                .EndCommand();
+        }
+
+        private void Generate(
+            CreateLocationOperation operation, 
+            MigrationCommandListBuilder builder)
+        {
+            var sqlHelper = Dependencies.SqlGenerationHelper;
+            var stringMapping = Dependencies.TypeMappingSource.FindMapping(typeof(string));
+            var stringMappingInt = Dependencies.TypeMappingSource.FindMapping(typeof(int));
+
+            builder.Append("INSERT ")
+                .Append(sqlHelper.DelimitIdentifier("LocationModel"))
+                .Append(" (")
+                .Append(sqlHelper.DelimitIdentifier("ApiId"))
+                .Append(", ")
+                .Append(sqlHelper.DelimitIdentifier("City"))
+                .Append(", ")
+                .Append(sqlHelper.DelimitIdentifier("Country"))
+                .Append(") VALUES (")
+                .Append(stringMappingInt.GenerateSqlLiteral(operation.ApiId))
+                .Append(",")
+                .Append(stringMapping.GenerateSqlLiteral(operation.City))
+                .Append(",")
+                .Append(stringMapping.GenerateSqlLiteral(operation.Country))
                 .Append(")")
                 .AppendLine(sqlHelper.StatementTerminator)
                 .EndCommand();

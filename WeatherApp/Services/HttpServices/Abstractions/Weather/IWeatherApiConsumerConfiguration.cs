@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Services.Enums;
 
 namespace Services.HttpServices.Abstractions.Weather
 {
@@ -6,5 +6,7 @@ namespace Services.HttpServices.Abstractions.Weather
     {
         string ApiId { get; }
         string ApiUrl { get; }
+        int Throttle { get; }
+        WeatherDataMetricSystem MetricSystem { get; }
     }
 }

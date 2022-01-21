@@ -9,6 +9,7 @@ using DataAccessLayer.Extensions;
 using Microsoft.Extensions.WebEncoders;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using WebMvc.Configuration;
 
 namespace WebMvc
 {
@@ -40,12 +41,15 @@ namespace WebMvc
             {
                 options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
             });
+
+            services.Configure<ViewConfiguration>(Configuration.GetSection(ViewConfiguration.Section));
+            services.Configure<DateTimeConfiguration>(Configuration.GetSection(DateTimeConfiguration.Section));
+            services.Configure<WeatherConfiguration>(Configuration.GetSection(WeatherConfiguration.Section));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WeatherContext context)
         {
-            // TODO: move all scripts to webpack?
             // TODO: Add volume to DB to persist data
             if (env.IsDevelopment())
             {

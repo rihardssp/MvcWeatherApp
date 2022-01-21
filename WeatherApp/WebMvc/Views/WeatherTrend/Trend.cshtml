@@ -4,7 +4,7 @@
     ViewData["Title"] = "Weather trends";
 }
 
-<h1>Latest weather data in @Model.Description: (@Model.DateFrom.ToString(Model.DateFormat) - @Model.DateTo.ToString(Model.DateFormat))</h1>
+<h1>Latest weather data in @Model.Description: UTC (@Model.DateFrom.ToString(Model.DateFormat) - @Model.DateTo.ToString(Model.DateFormat))</h1>
 <div>
     @await Html.PartialAsync("_Chart", new WebMvc.ViewModels.ChartViewModel
     {
@@ -14,7 +14,3 @@
         ChartType = WebMvc.Code.Enums.ChartType.line
     })
 </div>
-
-@section Scripts {
-    <script src="~/dist/bundle.js"></script>
-}

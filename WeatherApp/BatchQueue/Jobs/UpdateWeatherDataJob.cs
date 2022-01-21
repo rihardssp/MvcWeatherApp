@@ -31,12 +31,12 @@ namespace BatchQueue.Jobs
         {
             try
             {
+                _logger.LogInformation($"Job running at {DateTime.UtcNow}");
                 // TODO: add cloud data?
-
                 var attributeTypes = new int[] { (int)AttributeType.TemperatureCelsius, (int)AttributeType.WindSpeedMs };
                 var locationAndWeatherMaxDates = (from location in _repository.Location.FindAll()
                                                   from weather in _repository.WeatherAttribute.FindAll()
-                                                    .Where(e => e.LocationId == location.Id && (e.TypeId == (int)AttributeType.TemperatureCelsius || e.TypeId == (int)AttributeType.WindSpeedMs))
+                                                    .Where(e => e.LocationId == location.Id && (attributeTypes.Contains(e.TypeId)))
                                                     .DefaultIfEmpty()
                                                   select new
                                                   {
@@ -53,10 +53,10 @@ namespace BatchQueue.Jobs
                                                   })
                                                  .ToList();
 
-                var result = await _openWeatherConsumer.GetRequest(locationAndWeatherMaxDates.Select(e => e.ApiId).ToArray());
+                var result = await _openWeatherConsumer.SendRequest(locationAndWeatherMaxDates.Select(e => e.ApiId).ToArray());
                 foreach(var item in result)
                 {
-                    // Do not put in duplicates or entries in the past. This job only updates current (latest) entries.
+                    // Do not put in duplicates or entries in the past. This job only updates newest entries.
                     var location = locationAndWeatherMaxDates.FirstOrDefault(e => e.ApiId == item.LocationApiId);
                     if (location == null || location.lastUpdate >= item.Date)
                     {

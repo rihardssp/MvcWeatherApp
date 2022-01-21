@@ -1,11 +1,10 @@
 ﻿using DataAccessLayer.Enums;
-using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using WebMvc.Configuration;
 using WebMvc.ViewModels;
 
 namespace WebMvc.Controllers
@@ -14,9 +13,14 @@ namespace WebMvc.Controllers
     public class WeatherTrendController : Controller
     {
         private readonly IWeatherRepositoryWrapper _repository;
-
-        public WeatherTrendController(IWeatherRepositoryWrapper repository)
+        private readonly IDateTimeConfiguration _dateTimeUtil;
+        private readonly IWeatherConfiguration _configuration;
+        public WeatherTrendController(IWeatherRepositoryWrapper repository, 
+            IOptions<DateTimeConfiguration> dateTimeUtil, 
+            IOptions<WeatherConfiguration> configuration)
         {
+            _dateTimeUtil = dateTimeUtil.Value;
+            _configuration = configuration.Value;
             _repository = repository;
         }
 
@@ -29,10 +33,9 @@ namespace WebMvc.Controllers
                 return NotFound();
             }
 
-            // TODO: Move this to configuration. 
-            var dateFrom = DateTime.Now.AddHours(-2);
-            var dateTo = DateTime.Now;
-            var dateFormat = dateFrom.Day == dateTo.Day ? "HH:mm" : "ddd HH:mm";
+            var dateFrom = DateTime.UtcNow.AddHours(-_configuration.TrendLengthHours);
+            var dateTo = DateTime.UtcNow;
+            var dateFormat = dateFrom.Day == dateTo.Day ? _dateTimeUtil.TimeFormat : _dateTimeUtil.ShortenedDayTimeFormat;
 
             var data = _repository.WeatherAttribute.FindAll()
                 .Where(e => e.LocationId == location.Id && e.Date >= dateFrom && e.TypeId == (int)type)
@@ -58,7 +61,6 @@ namespace WebMvc.Controllers
         [Route("[action]/{id}")]
         public IActionResult Temperature([FromRoute] int id)
         {
-            // TODO: prehaps move the descriptions to a resource file?
             return GetTrend(id, AttributeType.TemperatureCelsius, "Temperature (Celsius)");
         }
 

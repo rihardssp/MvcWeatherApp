@@ -3,6 +3,9 @@ using System;
 
 namespace Services.HttpServices.Abstractions.Weather
 {
+    /// <summary>
+    /// Weather api response data
+    /// </summary>
     public class WeatherRecord
     {
         public double WindSpeed { get; set; }

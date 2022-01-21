@@ -1,5 +1,5 @@
 ﻿@model DataAccessLayer.Models.LocationModel
-
+@inject Microsoft.Extensions.Options.IOptions<WebMvc.Configuration.ViewConfiguration> configuration
 @{
     ViewData["Title"] = "Create";
 }
@@ -8,12 +8,9 @@
 
 <h4>LocationModel</h4>
 <hr />
-<!--
-    TODO: move the api url to config    
--->
 <div>
     <h5>
-        To find correct apiId for location, use <a href="https://openweathermap.org/current">Api documentation</a>
+        To find correct apiId for location, use <a href="@configuration.Value.ApiDocumentationUrl">Api documentation</a>
     </h5>
 </div>
 <div class="row">
@@ -46,6 +43,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Services.Extensions;
 using Services.HttpServices.Abstractions;
 using Services.HttpServices.Abstractions.Weather;
@@ -9,39 +10,35 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using OpenWeatherMap;
-using Microsoft.Extensions.Options;
 
 namespace Services.HttpServices.Services.Weather
 {
     /// <summary>
-    /// An attempt at using the bulk operation so there wouldn't be a need for so many requests.
-    /// Unfortunately bulk API only updates once per hour, so it doesn't work as expected for newest entries.
+    /// Bulk operation of the same API OpenWeatherApiConsumer is using.
+    /// Disadvantages: 
+    /// 1) Suspect the API is being discontinued (documentation for this was hidden) 
+    /// 2) Generated classes manually, no swagger exists either and no support from nuget
+    /// 3) Updates HOURLY! No point in making multiple calls per hour here.
     /// </summary>
     public class OpenWeatherApiConsumerBulk : IWeatherApiConsumer
     {
         private static readonly HttpClient _client = new HttpClient();
         private IWeatherApiConsumerConfiguration _configuration;
         private ILogger<OpenWeatherApiConsumer> _logger;
-        public OpenWeatherApiConsumerBulk(IOptions<IWeatherApiConsumerConfiguration> configuration, ILogger<OpenWeatherApiConsumer> logger)
+        public OpenWeatherApiConsumerBulk(IOptions<WeatherApiConsumerConfiguration> configuration, ILogger<OpenWeatherApiConsumer> logger)
         {
             _configuration = configuration.Value;
             _logger = logger;
         }
 
-        /// <summary>
-        /// TODO: Add cancellation token
-        /// </summary>
-        /// <param name="locationIds"></param>
-        /// <returns></returns>
-        public async Task<IList<WeatherRecord>> GetRequest(params int[] locationIds)
+        public async Task<IList<WeatherRecord>> SendRequest(params int[] locationIds)
         {
             var urlBuilder = new UriBuilder(_configuration.ApiUrl);
             var query = new Dictionary<string, string>
             {
                 { "appid", _configuration.ApiId },
                 { "id", string.Join(",", locationIds) },
-                { "units", "metric" }
+                { "units", _configuration.MetricSystem.ToString().ToLower() }
             };
 
             urlBuilder.Query = query.ToUrlQuery();

@@ -23,6 +23,16 @@ namespace DataAccessLayer.MigrationExtensions
             var operation = new CreateWeatherAttributeTypeOperation { Id = id, Name = name };
             migrationBuilder.Operations.Add(operation);
         }
+
+        public static void CreateLocation(
+            this MigrationBuilder migrationBuilder,
+            int apiId,
+            string city,
+            string country)
+        {
+            var operation = new CreateLocationOperation { ApiId = apiId, City = city, Country = country };
+            migrationBuilder.Operations.Add(operation);
+        }
     }
     
 }

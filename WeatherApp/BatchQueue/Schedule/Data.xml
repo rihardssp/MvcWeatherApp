@@ -8,7 +8,6 @@
   </processing-directives>
 
   <schedule>
-
     <job>
       <name>UpdateWeatherDataJob</name>
       <group>UpdateJobGroup</group>
@@ -16,14 +15,7 @@
       <job-type>BatchQueue.Jobs.UpdateWeatherDataJob, BatchQueue</job-type>
       <durable>true</durable>
       <recover>false</recover>
-      <job-data-map>
-        <entry>
-          <key>SomeValue</key>
-          <value>Absolutely rad!</value>
-        </entry>
-      </job-data-map>
     </job>
-    <!-- TODO: Change to proper cron trigger. -->
     <trigger>
       <simple>
         <name>UpdateWeatherTrigger</name>
@@ -32,7 +24,7 @@
         <job-group>UpdateJobGroup</job-group>
         <misfire-instruction>IgnoreMisfirePolicy</misfire-instruction>
         <repeat-count>-1</repeat-count>
-        <repeat-interval>300000</repeat-interval>
+        <repeat-interval>900000</repeat-interval>
       </simple>
     </trigger>
   </schedule>

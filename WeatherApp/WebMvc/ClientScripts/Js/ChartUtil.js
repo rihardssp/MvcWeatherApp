@@ -44,8 +44,6 @@ export function CreateChart(canvasId, chartType, datasets) {
         config
     );
 
-    console.log(chart);
-
     canvasItem.trigger(initializeGraphEventType, [chart]);
     return chart;
 }
@@ -58,7 +56,6 @@ const initializeGraphEventType = "initialize.chartutil";
 export function ListenInitializationEvent(canvasId, action) {
     const chart = Chart.getChart(canvasId);
     if (chart) {
-        console.log("FoundGraphInitialized");
         action(chart);
     }
 
@@ -68,8 +65,6 @@ export function ListenInitializationEvent(canvasId, action) {
     }
 
     canvas.on(initializeGraphEventType, function (event, data) {
-        // TODO: remove log
-        console.log("FiredInitEvent");
         action(data);
     });
 }
