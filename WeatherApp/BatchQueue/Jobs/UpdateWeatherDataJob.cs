@@ -31,7 +31,10 @@ namespace BatchQueue.Jobs
         {
             try
             {
+                // TODO: Refactor - the check below is useless in case of multiple runners
                 _logger.LogInformation($"Job running at {DateTime.UtcNow}");
+
+                // Select all locations with last date they were updated from the three following types
                 var attributeTypes = new int[] { (int)AttributeType.TemperatureCelsius, (int)AttributeType.WindSpeedMs, (int)AttributeType.CloudinessPercentage };
                 var locationAndWeatherMaxDates = (from location in _repository.Location.FindAll()
                                                   from weather in _repository.WeatherAttribute.FindAll()
@@ -55,7 +58,7 @@ namespace BatchQueue.Jobs
                 var result = await _openWeatherConsumer.SendRequest(locationAndWeatherMaxDates.Select(e => e.ApiId).ToArray());
                 foreach(var item in result)
                 {
-                    // Do not put in duplicates or entries in the past. This job only updates newest entries.
+                    // Do not put in duplicates or entries in the past. This job only adds new entries
                     var location = locationAndWeatherMaxDates.FirstOrDefault(e => e.ApiId == item.LocationApiId);
                     if (location == null || location.lastUpdate >= item.Date)
                     {

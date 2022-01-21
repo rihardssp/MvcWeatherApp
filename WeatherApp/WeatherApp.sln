@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchQueue", "BatchQueue\Ba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{0CCAE737-79C8-40E5-BE5D-29331A6C7849}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessDataLayer", "BusinessData\BusinessDataLayer.csproj", "{7A7A6666-BB01-4EC1-9E66-1359A1CCBD51}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +39,6 @@ Global
 		{0CCAE737-79C8-40E5-BE5D-29331A6C7849}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CCAE737-79C8-40E5-BE5D-29331A6C7849}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CCAE737-79C8-40E5-BE5D-29331A6C7849}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A7A6666-BB01-4EC1-9E66-1359A1CCBD51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A7A6666-BB01-4EC1-9E66-1359A1CCBD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A7A6666-BB01-4EC1-9E66-1359A1CCBD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A7A6666-BB01-4EC1-9E66-1359A1CCBD51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

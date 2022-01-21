@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
+    /// <summary>
+    /// Holds all repositories to make them accessible by injection easily.
+    /// </summary>
     public class WeatherRepositoryWrapper : IWeatherRepositoryWrapper
     {
         private WeatherContext _dbContext;

@@ -1,9 +1,11 @@
 ﻿using DataAccessLayer.MigrationExtensions.Operations;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
 
 namespace DataAccessLayer.MigrationExtensions
 {
+    /// <summary>
+    /// Makes easier to pre-fill sql and together with generator keeps code/agent separate
+    /// </summary>
     public static class MigrationBuilderExtensions
     {
         public static void SetIdentity<Model>(

@@ -16,7 +16,6 @@ namespace DataAccessLayer.Contexts
         {
         }
 
-        public DbSet<WeatherEntryModel> WeatherEntryModel { get; set; }
         public DbSet<LocationModel> LocationModel { get; set; }
         public DbSet<WeatherAttributeModel> WeatherAttributeModel { get; set; }
         public DbSet<WeatherAttributeTypeModel> WeatherAttributeTypeModel { get; set; }

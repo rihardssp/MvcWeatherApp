@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace DataAccessLayer.Repositories
 {
     /// <summary>
-    /// The main repository for the Weather domain
+    /// Holds all repositories to make them accessible by injection easily.
     /// </summary>
     public interface IWeatherRepositoryWrapper
     {

@@ -11,7 +11,11 @@ namespace BatchQueue
     /// <summary>
     /// This console is dedicated for Quartz job scheduler. 
     /// Scheduler is added as a HostBuilder through plugin to conveniently use established context & repositories, access to DI and logging,
-    /// as well as configuration
+    /// as well as configuration.
+    /// 
+    /// File for scheduling the job is defined below
+    /// 
+    /// Quartz scheduler runs on RAM DB, so this image instance only accesses DB to push data.
     /// </summary>
     class Program
     {
