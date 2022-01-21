@@ -5,11 +5,11 @@ services:
     image: ${DOCKER_REGISTRY-}sprihards/weather_app_mvc:v1.21.1.22.3
     depends_on:
       - db
-  environment:
-    - ASPNETCORE_ENVIRONMENT=Development
-    - ASPNETCORE_URLS=http://+:80
-  ports:
-    - "80:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "80:80"
   batchqueue:
     image: ${DOCKER_REGISTRY-}sprihards/weather_app_batchqueue:v1.21.1.22.3
     environment:
