@@ -2,14 +2,14 @@ version: '3.4'
 
 services:
   webmvc:
-    image: ${DOCKER_REGISTRY-}sprihards/weather_app_mvc:latest
+    image: ${DOCKER_REGISTRY-}sprihards/weather_app_mvc:v1.21.1.22
     build:
       context: .
       dockerfile: WebMvc/Dockerfile
     depends_on:
       - db
   batchqueue:
-    image: ${DOCKER_REGISTRY-}sprihards/weather_app_batchqueue:latest
+    image: ${DOCKER_REGISTRY-}sprihards/weather_app_batchqueue:v1.21.1.22
     build:
       context: .
       dockerfile: BatchQueue/Dockerfile
