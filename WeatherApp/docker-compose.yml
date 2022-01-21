@@ -13,6 +13,8 @@ services:
     build:
       context: .
       dockerfile: BatchQueue/Dockerfile
+    environment:
+      WeatherApiConsumerConfiguration__ApiId: "8cc7bc078bc177ddd9d1deb683e9045e"
     depends_on:
       - db
       - webmvc
