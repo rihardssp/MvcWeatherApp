@@ -63,7 +63,9 @@ namespace WebMvc
 
             context.Database.Migrate();
 
-            app.UseHttpsRedirection();
+            // Disabled http 
+            //app.UseHttpsRedirection();
+
             app.UseStaticFiles();
             app.UseRouting();
 
